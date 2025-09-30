@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPN Calculator v2.0 - 用户手册</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #7f8c8d;
+        }
+        .code-block {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .command {
+            background-color: #34495e;
+            color: #ecf0f1;
+            padding: 8px 12px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            display: inline-block;
+            margin: 2px;
+        }
+        .error {
+            background-color: #e74c3c;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .success {
+            background-color: #27ae60;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .note {
+            background-color: #f39c12;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            border: 1px solid #bdc3c7;
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        .toc {
+            background-color: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .toc a {
+            text-decoration: none;
+            color: #2980b9;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RPN Calculator v2.0 - 用户手册</h1>
+        
+        <div class="toc">
+            <h3>目录</h3>
+            <ul>
+                <li><a href="#overview">概述</a></li>
+                <li><a href="#installation">安装和编译指南</a></li>
+                <li><a href="#basic-usage">基本使用示例</a></li>
+                <li><a href="#operations">所有支持的操作说明</a></li>
+                <li><a href="#advanced">高级功能示例</a></li>
+                <li><a href="#errors">错误代码和异常说明</a></li>
+                <li><a href="#examples">示例输入输出</a></li>
+                <li><a href="#best-practices">最佳实践</a></li>
+                <li><a href="#technical">技术规范</a></li>
+            </ul>
+        </div>
+
+        <h2 id="overview">概述</h2>
+        <p>RPN Calculator是一个基于命令行界面的逆波兰表示法（Reverse Polish Notation）计算器，使用C++实现。
+        RPN是一种数学表达式的表示方法，操作符位于操作数之后，无需使用括号即可明确表达式的计算顺序。</p>
+
+        <h2 id="installation">安装和编译指南</h2>
+        
+        <h3>系统要求</h3>
+        <ul>
+            <li>C++11或更高版本的编译器（推荐g++）</li>
+            <li>支持标准C++库的操作系统（Windows、Linux、macOS）</li>
+        </ul>
+
+        <h3>编译步骤</h3>
+        <div class="code-block">g++ -o rpn_calc rpn_calculator.cpp -std=c++11</div>
+
+        <h3>运行程序</h3>
+        <div class="code-block">./rpn_calc</div>
+
+        <h2 id="basic-usage">基本使用示例</h2>
+        
+        <h3>启动界面</h3>
+        <p>程序启动后会显示欢迎信息和提示符：</p>
+        <div class="code-block">
+RPN Calculator v2.0<br>
+Type 'help' for instructions or 'quit' to exit<br>
+RPN[0]>
+        </div>
+        <p>提示符中的数字表示当前栈中元素的个数。</p>
+
+        <h3>基本操作示例</h3>
+        
+        <h4>1. 简单算术运算</h4>
+        <div class="code-block">
+# 计算 3 + 4<br>
+RPN[0]> 3<br>
+Pushed: 3<br>
+RPN[1]> 4<br>
+Pushed: 4<br>
+RPN[2]> +<br>
+Result: 7.000000
+        </div>
+
+        <div class="code-block">
+# 计算 10 - 3<br>
+RPN[0]> 10<br>
+Pushed: 10<br>
+RPN[1]> 3<br>
+Pushed: 3<br>
+RPN[2]> -<br>
+Result: 7.000000
+        </div>
+
+        <h4>2. 复合表达式计算</h4>
+        <p>使用<span class="command">eval</span>命令可以一次性计算完整的RPN表达式：</p>
+        <div class="code-block">
+# 计算 (3 + 4) * 2<br>
+RPN[0]> eval 3 4 + 2 *<br>
+Result: 14.000000
+        </div>
+
+        <div class="code-block">
+# 计算 15 / (7 - 1 - 1) * 3 - (2 + 1 + 1)<br>
+RPN[0]> eval 15 7 1 1 + - / 3 * 2 1 1 + + -<br>
+Result: 5.000000
+        </div>
+
+        <h2 id="operations">所有支持的操作说明</h2>
+        
+        <h3>基本算术运算</h3>
+        <table>
+            <tr><th>操作符</th><th>说明</th><th>操作数数量</th></tr>
+            <tr><td>+</td><td>加法运算</td><td>2</td></tr>
+            <tr><td>-</td><td>减法运算</td><td>2</td></tr>
+            <tr><td>*</td><td>乘法运算</td><td>2</td></tr>
+            <tr><td>/</td><td>除法运算</td><td>2</td></tr>
+        </table>
+
+        <h3>高级数学运算</h3>
+        <table>
+            <tr><th>操作符</th><th>说明</th><th>操作数数量</th></tr>
+            <tr><td>sqrt</td><td>平方根运算</td><td>1</td></tr>
+            <tr><td>pow</td><td>幂运算（底数在前，指数在后）</td><td>2</td></tr>
+            <tr><td>sin</td><td>正弦函数（弧度制）</td><td>1</td></tr>
+            <tr><td>cos</td><td>余弦函数（弧度制）</td><td>1</td></tr>
+            <tr><td>tan</td><td>正切函数（弧度制）</td><td>1</td></tr>
+        </table>
+
+        <h3>特殊运算</h3>
+        <table>
+            <tr><th>操作符</th><th>说明</th><th>操作数数量</th></tr>
+            <tr><td>fib</td><td>斐波那契数列运算（需要非负整数）</td><td>1</td></tr>
+        </table>
+
+        <h3>栈管理命令</h3>
+        <table>
+            <tr><th>命令</th><th>说明</th></tr>
+            <tr><td>display</td><td>显示当前栈中所有元素</td></tr>
+            <tr><td>clear</td><td>清空当前栈</td></tr>
+            <tr><td>history</td><td>显示计算历史记录</td></tr>
+            <tr><td>clearhistory</td><td>清空计算历史记录</td></tr>
+        </table>
+
+        <h3>系统命令</h3>
+        <table>
+            <tr><th>命令</th><th>说明</th></tr>
+            <tr><td>help</td><td>显示帮助信息</td></tr>
+            <tr><td>quit / exit</td><td>退出程序</td></tr>
+            <tr><td>eval &lt;expression&gt;</td><td>计算完整的RPN表达式</td></tr>
+        </table>
+
+        <h2 id="advanced">高级功能示例</h2>
+
+        <h3>1. 平方根运算</h3>
+        <div class="code-block">
+RPN[0]> 9<br>
+Pushed: 9<br>
+RPN[1]> sqrt<br>
+Result: 3.000000
+        </div>
+
+        <h3>2. 幂运算</h3>
+        <div class="code-block">
+# 计算 2^8<br>
+RPN[0]> 2<br>
+Pushed: 2<br>
+RPN[1]> 8<br>
+Pushed: 8<br>
+RPN[2]> pow<br>
+Result: 256.000000
+        </div>
+
+        <h3>3. 斐波那契数列</h3>
+        <div class="code-block">
+# 计算第10个斐波那契数<br>
+RPN[0]> 10<br>
+Pushed: 10<br>
+RPN[1]> fib<br>
+Result: 55.000000
+        </div>
+
+        <h3>4. 三角函数</h3>
+        <div class="code-block">
+# 计算 sin(π/4)<br>
+RPN[0]> 3.14159<br>
+Pushed: 3.14159<br>
+RPN[1]> 4<br>
+Pushed: 4<br>
+RPN[2]> /<br>
+Result: 0.785398<br>
+RPN[1]> sin<br>
+Result: 0.707107
+        </div>
+
+        <h3>5. 栈操作演示</h3>
+        <div class="code-block">
+RPN[0]> 1<br>
+Pushed: 1<br>
+RPN[1]> 2<br>
+Pushed: 2<br>
+RPN[2]> 3<br>
+Pushed: 3<br>
+RPN[3]> display<br>
+Stack contents (top to bottom): 3.00, 2.00, 1.00<br>
+RPN[3]> clear<br>
+Stack cleared.<br>
+RPN[0]>
+        </div>
+
+        <h2 id="errors">错误代码和异常说明</h2>
+
+        <h3>常见错误类型</h3>
+
+        <h4>1. 栈操作错误</h4>
+        <div class="error">
+            <strong>Error: Stack is empty, cannot pop</strong> - 尝试从空栈中弹出元素
+        </div>
+        <div class="error">
+            <strong>Error: Insufficient operands for [operation]</strong> - 操作数不足，无法执行指定运算
+        </div>
+
+        <h4>2. 数学运算错误</h4>
+        <div class="error">
+            <strong>Error: Division by zero</strong> - 除零错误
+        </div>
+        <div class="error">
+            <strong>Error: Cannot take square root of negative number</strong> - 对负数开平方根
+        </div>
+        <div class="error">
+            <strong>Error: Fibonacci requires non-negative integer</strong> - 斐波那契运算需要非负整数
+        </div>
+
+        <h4>3. 输入格式错误</h4>
+        <div class="error">
+            <strong>Error: Invalid token: [token]</strong> - 输入了无法识别的符号或操作符
+        </div>
+        <div class="error">
+            <strong>Error: Unknown operator: [operator]</strong> - 使用了不支持的操作符
+        </div>
+        <div class="error">
+            <strong>Error: Unknown command '[command]'</strong> - 输入了无法识别的命令
+        </div>
+
+        <h4>4. 表达式错误</h4>
+        <div class="error">
+            <strong>Error: Invalid expression - stack contains [N] elements</strong> - 表达式计算完成后栈中不是恰好一个元素
+        </div>
+        <div class="error">
+            <strong>Error: No expression provided for eval command</strong> - eval命令后没有提供表达式
+        </div>
+
+        <h2 id="examples">示例输入输出</h2>
+
+        <h3>基础计算示例</h3>
+        <table>
+            <tr><th>输入</th><th>输出</th><th>说明</th></tr>
+            <tr><td>3 4 +</td><td>7.000000</td><td>3 + 4</td></tr>
+            <tr><td>10 5 2 * -</td><td>0.000000</td><td>10 - (5 * 2)</td></tr>
+            <tr><td>4 2 / 3 +</td><td>5.000000</td><td>(4 / 2) + 3</td></tr>
+        </table>
+
+        <h3>复杂表达式示例</h3>
+        <div class="note">
+            <strong>计算: ((3 + 4) * 5 - 2) / 3</strong><br>
+            RPN表达式: 3 4 + 5 * 2 - 3 /<br>
+            步骤:<br>
+            3 4 + → 7<br>
+            7 5 * → 35<br>
+            35 2 - → 33<br>
+            33 3 / → 11.000000
+        </div>
+
+        <h3>斐波那契数列示例</h3>
+        <table>
+            <tr><th>n</th><th>F(n)</th></tr>
+            <tr><td>0</td><td>0</td></tr>
+            <tr><td>1</td><td>1</td></tr>
+            <tr><td>2</td><td>1</td></tr>
+            <tr><td>3</td><td>2</td></tr>
+            <tr><td>4</td><td>3</td></tr>
+            <tr><td>5</td><td>5</td></tr>
+            <tr><td>6</td><td>8</td></tr>
+            <tr><td>7</td><td>13</td></tr>
+            <tr><td>8</td><td>21</td></tr>
+            <tr><td>9</td><td>34</td></tr>
+            <tr><td>10</td><td>55</td></tr>
+        </table>
+
+        <h2 id="best-practices">最佳实践</h2>
+
+        <h3>1. 逐步构建复杂表达式</h3>
+        <p>对于复杂的计算，建议先逐步构建并验证中间结果：</p>
+        <div class="code-block">
+RPN[0]> 3<br>
+RPN[1]> 4<br>
+RPN[2]> +<br>
+Result: 7.000000<br>
+RPN[1]> 5<br>
+RPN[2]> *<br>
+Result: 35.000000
+        </div>
+
+        <h3>2. 使用display命令检查栈状态</h3>
+        <p>在复杂计算过程中，使用display命令检查栈的当前状态：</p>
+        <div class="code-block">
+RPN[3]> display<br>
+Stack contents (top to bottom): 35.00, 2.00, 1.00
+        </div>
+
+        <h3>3. 利用计算历史</h3>
+        <p>使用history命令查看之前的计算结果：</p>
+        <div class="code-block">
+RPN[0]> history<br>
+Calculation History:<br>
+1. 3 4 + = 7.000000<br>
+2. 3 4 + 5 * = 35.000000
+        </div>
+
+        <h3>4. 批量表达式计算</h3>
+        <p>使用eval命令可以快速计算多个表达式而无需手动管理栈：</p>
+        <div class="code-block">
+RPN[0]> eval 2 3 pow    # 2^3 = 8<br>
+RPN[0]> eval 16 sqrt    # √16 = 4<br>
+RPN[0]> eval 6 fib      # F(6) = 8
+        </div>
+
+        <h2 id="technical">技术规范</h2>
+
+        <h3>数据类型</h3>
+        <ul>
+            <li>所有数值计算使用双精度浮点数（double）</li>
+            <li>斐波那契数列计算使用长整型（long long）以避免溢出</li>
+            <li>输出精度默认为6位小数</li>
+        </ul>
+
+        <h3>内存管理</h3>
+        <ul>
+            <li>使用STL标准库的stack容器管理操作数栈</li>
+            <li>使用vector容器存储计算历史记录</li>
+            <li>程序退出时自动释放所有内存资源</li>
+        </ul>
+
+        <h3>错误处理</h3>
+        <ul>
+            <li>所有异常都使用C++标准异常类处理</li>
+            <li>输入验证确保数值转换的安全性</li>
+            <li>栈操作前进行充分的边界检查</li>
+        </ul>
+
+        <div class="success">
+            <strong>RPN Calculator v2.0</strong> - 一个功能完整、易于使用的逆波兰表达式计算器
+        </div>
+    </div>
+</body>
+</html>
